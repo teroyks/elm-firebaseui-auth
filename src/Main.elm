@@ -9,14 +9,19 @@ import Html.Attributes exposing (src)
 ---- MODEL ----
 
 
+type alias Flags =
+    { timestamp : Int
+    }
+
+
 type alias Model =
     { timestamp : Int
     }
 
 
-init : Int -> ( Model, Cmd Msg )
-init currentTime =
-    ( { timestamp = currentTime }, Cmd.none )
+init : Flags -> ( Model, Cmd Msg )
+init flags =
+    ( { timestamp = flags.timestamp }, Cmd.none )
 
 
 
@@ -49,7 +54,7 @@ view model =
 ---- PROGRAM ----
 
 
-main : Program Int Model Msg
+main : Program Flags Model Msg
 main =
     Browser.element
         { view = view
