@@ -10,12 +10,13 @@ import Html.Attributes exposing (src)
 
 
 type alias Model =
-    {}
+    { timestamp : Int
+    }
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( {}, Cmd.none )
+init : Int -> ( Model, Cmd Msg )
+init currentTime =
+    ( { timestamp = currentTime }, Cmd.none )
 
 
 
@@ -40,6 +41,7 @@ view model =
     div []
         [ img [ src "/logo.svg" ] []
         , h1 [] [ text "Your Elm App is working!" ]
+        , div [] [ text ("Timestamp: " ++ String.fromInt model.timestamp) ]
         ]
 
 
@@ -47,11 +49,11 @@ view model =
 ---- PROGRAM ----
 
 
-main : Program () Model Msg
+main : Program Int Model Msg
 main =
     Browser.element
         { view = view
-        , init = \_ -> init
+        , init = init
         , update = update
         , subscriptions = always Sub.none
         }
