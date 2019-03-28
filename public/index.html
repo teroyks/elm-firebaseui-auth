@@ -24,6 +24,8 @@
     />
     <script type="text/JavaScript">
       let loggedIn = undefined
+      let userData = undefined
+
       // FirebaseUI config
       const uiConfig = {
         signInSuccessUrl: '/app',
@@ -63,12 +65,12 @@
             const displayName = user.displayName
             const email = user.email
             const uid = user.uid
-            user.getIdToken().then(accessToken => {
+            user.getIdToken().then(authToken => {
               loggedIn = true
-              const userInfo = {
-                uid, displayName, email, accessToken
+              userData = {
+                uid, displayName, email, authToken
               }
-              console.log('userInfo in Javascript', userInfo)
+              console.log('userInfo in Javascript', userData)
 
               authContainer.innerHTML = `
                 <p><button onClick="firebase.auth().signOut()">Logout</button></p>`
@@ -77,6 +79,7 @@
           } else {
             // user is signed out
             loggedIn = false
+            userData = {}
             authContainer.textContent = ''
             ui.start('#firebaseui-auth-container', uiConfig);
           }

@@ -14,12 +14,16 @@ function waitForLoginStatus(count) {
   }
 
   console.log('checking login status...');
-  if (loggedIn !== undefined) {
+  if (loggedIn !== undefined && userData !== undefined) {
     // received login status - initialize Elm
 
     Elm.Main.init({
       node: document.getElementById('root'),
-      flags: { timestamp: Date.now(), loggedIn },
+      flags: {
+        timestamp: Date.now(),
+        loggedIn,
+        userData: JSON.stringify(userData),
+      },
     });
 
     registerServiceWorker();

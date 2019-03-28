@@ -3,6 +3,8 @@ module Main exposing (Model, Msg(..), init, main, update, view)
 import Browser
 import Html exposing (Html, div, h1, img, text)
 import Html.Attributes exposing (src)
+import Json.Decode as D exposing (Decoder)
+import Result
 
 
 
@@ -12,18 +14,55 @@ import Html.Attributes exposing (src)
 type alias Flags =
     { timestamp : Int
     , loggedIn : Bool
+    , userData : String
+    }
+
+
+type alias UserData =
+    { uid : String
+    , displayName : String
+    , email : String
+    , authToken : String
     }
 
 
 type alias Model =
     { timestamp : Int
     , isLoggedIn : Bool
+    , user : UserData
     }
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { timestamp = flags.timestamp, isLoggedIn = flags.loggedIn }, Cmd.none )
+    let
+        user =
+            case D.decodeString decoder flags.userData of
+                Ok data ->
+                    data
+
+                Err _ ->
+                    { uid = flags.userData
+                    , displayName = ""
+                    , email = ""
+                    , authToken = ""
+                    }
+    in
+    ( { timestamp = flags.timestamp
+      , isLoggedIn = flags.loggedIn
+      , user = user
+      }
+    , Cmd.none
+    )
+
+
+decoder : D.Decoder UserData
+decoder =
+    D.map4 UserData
+        (D.field "uid" D.string)
+        (D.field "displayName" D.string)
+        (D.field "email" D.string)
+        (D.field "authToken" D.string)
 
 
 
