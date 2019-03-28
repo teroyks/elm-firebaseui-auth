@@ -23,7 +23,6 @@
       href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"
     />
     <script type="text/JavaScript">
-      let loggedIn = undefined
       let userData = undefined
 
       // FirebaseUI config
@@ -66,7 +65,6 @@
             const email = user.email
             const uid = user.uid
             user.getIdToken().then(authToken => {
-              loggedIn = true
               userData = {
                 uid, displayName, email, authToken
               }
@@ -78,7 +76,6 @@
 
           } else {
             // user is signed out
-            loggedIn = false
             userData = {}
             authContainer.textContent = ''
             ui.start('#firebaseui-auth-container', uiConfig);

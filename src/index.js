@@ -10,18 +10,17 @@ function waitForLoginStatus(count) {
     console.error(
       'Something went wrong (maximum tries exceeded) - try logging in again'
     );
-    loggedIn = false;
+    userData = {};
   }
 
   console.log('checking login status...');
-  if (loggedIn !== undefined && userData !== undefined) {
+  if (userData !== undefined) {
     // received login status - initialize Elm
 
     Elm.Main.init({
       node: document.getElementById('root'),
       flags: {
         timestamp: Date.now(),
-        loggedIn,
         userData: JSON.stringify(userData),
       },
     });

@@ -13,7 +13,6 @@ import Result
 
 type alias Flags =
     { timestamp : Int
-    , loggedIn : Bool
     , userData : String
     }
 
@@ -29,7 +28,7 @@ type alias UserData =
 type alias Model =
     { timestamp : Int
     , isLoggedIn : Bool
-    , user : UserData
+    , user : Maybe UserData
     }
 
 
@@ -39,17 +38,19 @@ init flags =
         user =
             case D.decodeString decoder flags.userData of
                 Ok data ->
-                    data
+                    Just data
 
                 Err _ ->
-                    { uid = flags.userData
-                    , displayName = ""
-                    , email = ""
-                    , authToken = ""
-                    }
+                    Nothing
     in
     ( { timestamp = flags.timestamp
-      , isLoggedIn = flags.loggedIn
+      , isLoggedIn =
+            case user of
+                Nothing ->
+                    False
+
+                _ ->
+                    True
       , user = user
       }
     , Cmd.none
