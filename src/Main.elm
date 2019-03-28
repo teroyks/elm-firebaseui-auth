@@ -11,17 +11,19 @@ import Html.Attributes exposing (src)
 
 type alias Flags =
     { timestamp : Int
+    , loggedIn : Bool
     }
 
 
 type alias Model =
     { timestamp : Int
+    , isLoggedIn : Bool
     }
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { timestamp = flags.timestamp }, Cmd.none )
+    ( { timestamp = flags.timestamp, isLoggedIn = flags.loggedIn }, Cmd.none )
 
 
 
