@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <title>Elm App</title>
+
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-auth.js"></script>
+    <script src="firebase.config.js"></script>
+
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"
+    />
+    <script type="text/JavaScript">
+      // FirebaseUI config
+      const uiConfig = {
+        signInSuccessUrl: '/app',
+        signInOptions: [
+          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        ],
+        signInFlow: 'popup',
+        // Terms of service url/callback.
+        tosUrl: '<your-tos-url>',
+        // Privacy policy url/callback.
+        privacyPolicyUrl: function() {
+          window.location.assign('<your-privacy-policy-url>');
+        }
+      };
+
+      // Initialize the FirebaseUI Widget using Firebase.
+      var ui = new firebaseui.auth.AuthUI(firebase.auth());
+      // The start method will wait until the DOM is loaded.
+    </script>
+  </head>
+  <body>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <div id="root"></div>
+
+    <div id="sign-in-status"></div>
+    <div id="sign-in"></div>
+    <div id="account-details"></div>
+    <div id="firebaseui-auth-container"></div>
+
+    <script type="text/JavaScript">
+      initApp = function() {
+        const authContainer = document.getElementById('firebaseui-auth-container')
+        firebase.auth().onAuthStateChanged(user => {
+          if (user) {
+            const displayName = user.displayName
+            const email = user.email
+            const uid = user.uid
+            user.getIdToken().then(accessToken => {
+              const userInfo = {
+                uid, displayName, email, accessToken
+              }
+              console.log('userInfo in Javascript', userInfo)
+
+              authContainer.innerHTML = `
+                <p><button onClick="firebase.auth().signOut()">Logout</button></p>`
+            })
+
+          } else {
+            // user is signed out
+            authContainer.textContent = ''
+            ui.start('#firebaseui-auth-container', uiConfig);
+          }
+        })
+      }
+
+      window.addEventListener('load', function() { initApp()})
+    </script>
+  </body>
+</html>
