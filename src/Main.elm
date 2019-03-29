@@ -27,7 +27,6 @@ type alias UserData =
 
 type alias Model =
     { timestamp : Int
-    , isLoggedIn : Bool
     , user : Maybe UserData
     }
 
@@ -44,13 +43,6 @@ init flags =
                     Nothing
     in
     ( { timestamp = flags.timestamp
-      , isLoggedIn =
-            case user of
-                Nothing ->
-                    False
-
-                _ ->
-                    True
       , user = user
       }
     , Cmd.none
@@ -86,10 +78,19 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ img [ src "/logo.svg" ] []
-        , h1 [] [ text "Your Elm App is working!" ]
-        , div [] [ text ("Timestamp: " ++ String.fromInt model.timestamp) ]
-        ]
+        ([ img [ src "/logo.svg" ] [] ]
+            ++ (case model.user of
+                    Just user ->
+                        [ h1 [] [ text "Your Elm App is working!" ]
+                        , div [] [ text ("Timestamp: " ++ String.fromInt model.timestamp) ]
+                        , div [] [ text ("Welcome, " ++ user.displayName) ]
+                        ]
+
+                    Nothing ->
+                        [ div [] [ text "Log in to use the app" ]
+                        ]
+               )
+        )
 
 
 
