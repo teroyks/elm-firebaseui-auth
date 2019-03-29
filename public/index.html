@@ -71,7 +71,7 @@
               console.log('userInfo in Javascript', userData)
 
               authContainer.innerHTML = `
-                <p><button onClick="firebase.auth().signOut()">Logout</button></p>`
+                <p><button onClick="firebase.auth().signOut() && location.reload();">Logout</button></p>`
             })
 
           } else {
